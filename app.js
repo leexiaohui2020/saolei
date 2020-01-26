@@ -23,8 +23,6 @@ class AppBootHook {
       secureConnection: true,
     });
     ctx.transporter = app.transporter = transporter;
-
-    app.runSchedule('flink');
   }
 }
 

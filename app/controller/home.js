@@ -7,40 +7,29 @@ class HomeController extends Controller {
   async api2020() {
     const { ctx } = this;
     ctx.validate({
-      name: { type: 'string' },
       link: { type: 'url' },
+      name: { type: 'string' },
     });
 
-    if (ctx.session.api2020 && Date.now() - ctx.session.api2020 < 60000) {
-      ctx.body = { status: 'err', errmsg: '操作频繁，请稍后再试' };
-    } else {
-      ctx.session.api2020 = Date.now();
-      await ctx.service.flink.add(ctx.request.body);
-      ctx.body = { status: 'ok' };
+    if (ctx.notFrequent('api2020')) {
+      ctx.handler(await ctx.service.flink.add(ctx.request.body));
     }
   }
 
   // 索取源码
   async api2021() {
     const { ctx } = this;
-    ctx.validate({
-      email: { type: 'email' },
-    });
+    ctx.validate({ email: { type: 'email' } });
 
-    if (ctx.session.api2021 && Date.now() - ctx.session.api2021 < 60000) {
-      ctx.body = { status: 'err', errmsg: '操作频繁，请稍后再试' };
-    } else {
-      ctx.session.api2021 = Date.now();
-      await ctx.service.exact.add(ctx.request.body);
-      ctx.body = { status: 'ok' };
+    if (ctx.notFrequent('api2021')) {
+      ctx.handler(await ctx.service.exact.add(ctx.request.body));
     }
   }
 
   // 友链列表
   async api2022() {
     const { ctx } = this;
-    const data = await ctx.service.flink.lst();
-    ctx.body = { status: 'ok', data };
+    ctx.handler(await ctx.service.flink.lst())
   }
 }
 

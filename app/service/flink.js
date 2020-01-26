@@ -1,5 +1,6 @@
 'use strict';
 const Service = require('egg').Service;
+const cheerio = require('cheerio');
 
 class FlinkService extends Service {
 
@@ -10,12 +11,21 @@ class FlinkService extends Service {
    */
   async add(opts = {}) {
     const { ctx } = this;
+    const { name, link } = opts;
+    if (await ctx.model.Flink.findOne({ link })) {
+      return new Error('该链接已经提交过了');
+    }
+
+    if (!await this.validate(link)) {
+      return new Error('请在贵站首页添加本站链接：https://saolei.game.leexiaohui.top');
+    }
+
     await ctx.model.Flink.create({
-      name: opts.name,
-      link: opts.link,
+      name,
+      link,
       date: new Date(),
+      display: true,
     });
-    ctx.logger.info('友链申请：[%s]@[%s]', opts.name, opts.link);
   }
 
   async lst() {
@@ -24,6 +34,22 @@ class FlinkService extends Service {
       { display: true },
       { _id: 0, __v: 0, date: 0 },
     ).sort({ date: 1 });
+  }
+
+  /**
+   * 友链有效性检查
+   * @param {String} url
+   */
+  async validate(url) {
+    try {
+      const { ctx } = this;
+      const { data } = await ctx.curl(url, { dataType: 'text' });
+      const $ = cheerio.load(data, { decodeEntities: false });
+      const link = $('a[href^="https://saolei.game.leexiaohui.top"]');
+      return link.length > 0;
+    } catch(e) {
+      return false;
+    }
   }
 }
 
