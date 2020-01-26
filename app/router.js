@@ -6,4 +6,6 @@ module.exports = app => {
   router.post('/api2020', controller.home.api2020);
   // 索取源码
   router.post('/api2021', controller.home.api2021);
+  // 友链列表
+  router.post('/api2022', controller.home.api2022);
 };

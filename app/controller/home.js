@@ -35,6 +35,13 @@ class HomeController extends Controller {
       ctx.body = { status: 'ok' };
     }
   }
+
+  // 友链列表
+  async api2022() {
+    const { ctx } = this;
+    const data = await ctx.service.flink.lst();
+    ctx.body = { status: 'ok', data };
+  }
 }
 
 module.exports = HomeController;

@@ -17,6 +17,14 @@ class FlinkService extends Service {
     });
     ctx.logger.info('友链申请：[%s]@[%s]', opts.name, opts.link);
   }
+
+  async lst() {
+    const { ctx } = this;
+    return await ctx.model.Flink.find(
+      { display: true },
+      { _id: 0, __v: 0, date: 0 },
+    ).sort({ date: 1 });
+  }
 }
 
 module.exports = FlinkService;
