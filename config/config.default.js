@@ -25,9 +25,22 @@ module.exports = appInfo => {
 
   config.mongoose = {
     url: 'mongodb://localhost:27017/SAOLEI-V1',
-    option: { useUnifiedTopology: true },
+    options: { useUnifiedTopology: true },
   };
 
   config.security = { csrf: false };
+
+  // 接口api2021相关配置
+  config.api2021 = {
+    name: '扫雷开源在线',
+    user: 'game_saolei@sina.com',
+    pass: '8d8f1bf03c048db5',
+    host: 'smtp.sina.com',
+    port: 465,
+    attachments: [{
+      filename: '扫雷游戏源码.zip',
+      path: path.join(__dirname, '../private/扫雷游戏源码.zip'),
+    }],
+  };
   return config;
 };
