@@ -22,5 +22,12 @@ module.exports = appInfo => {
   config.cluster = {
     listen: { port: 20201 },
   };
+
+  config.mongoose = {
+    url: 'mongodb://localhost:27017/SAOLEI-V1',
+    option: { useUnifiedTopology: true },
+  };
+
+  config.security = { csrf: false };
   return config;
 };
